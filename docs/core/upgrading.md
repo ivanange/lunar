@@ -20,6 +20,32 @@ Re-publish the admin hub assets
 php artisan lunar:hub:install
 ```
 
+## [Unreleased]
+
+### High Impact
+
+#### Carts
+
+- The `shippingTotal` property now includes the tax in the amount, use `shippingSubTotal` instead.
+- A new `shippingBreakdown` property has been added which will include all shipping costs and be available to pipelines.
+
+If you are modifying the shipping cost outside of your own shipping options in the shipping manifest, you should create a custom cart pipeline and use the shipping breakdown property as this is where the shipping total will be calculated from.
+
+```php
+use Lunar\Base\ValueObjects\Cart\ShippingBreakdown;
+use Lunar\Base\ValueObjects\Cart\ShippingBreakdownItem;
+
+$shippingBreakdown = $cart->shippingBreakdown ?: new ShippingBreakdown;
+
+$shippingBreakdown->items->put('ADDSHIP',
+    new ShippingBreakdownItem(
+        name: 'Additional Shipping Cost',
+        identifier: 'ADDSHIP',
+        price: new Price(123, $currency, 1),
+    )
+);
+```
+
 ## 0.3
 
 ### High Impact
