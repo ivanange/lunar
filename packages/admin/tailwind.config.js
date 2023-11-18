@@ -31,10 +31,20 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+                sans: ['Poppins', 'Nunito', ...defaultTheme.fontFamily.sans],
             },
             zIndex: {
                 75: 75,
+            },
+            colors: {
+                primary: colors.green,
+                secondary: colors.slate,
+                positive: colors.emerald,
+                negative: colors.red,
+                success: colors.lime,
+                warning: colors.amber,
+                info: colors.blue,
+                danger: colors.red,
             },
         },
     },
