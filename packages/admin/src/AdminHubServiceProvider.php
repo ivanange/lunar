@@ -134,8 +134,7 @@ use Lunar\Hub\Tables\Builders\ProductTypesTableBuilder;
 use Lunar\Hub\Tables\Builders\ProductVariantsTableBuilder;
 use Lunar\Models\Product;
 
-class AdminHubServiceProvider extends ServiceProvider
-{
+class AdminHubServiceProvider extends ServiceProvider {
     protected $configFiles = [
         'customers',
         'database',
@@ -144,15 +143,14 @@ class AdminHubServiceProvider extends ServiceProvider
         'system',
     ];
 
-    protected $root = __DIR__.'/..';
+    protected $root = __DIR__ . '/..';
 
     /**
      * Register any application services.
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         collect($this->configFiles)->each(function ($config) {
             $this->mergeConfigFrom("{$this->root}/config/$config.php", "lunar-hub.$config");
         });
@@ -197,17 +195,19 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         if (config('lunar-hub.system.enable', true)) {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         }
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'adminhub');
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'adminhub');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'adminhub');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'adminhub');
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../resources/lang');
+        $this->loadJsonTranslationsFrom(lang_path('vendor/adminhub'));
 
-        if (! config('lunar-hub.database.disable_migrations', false)) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        if (!config('lunar-hub.database.disable_migrations', false)) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
         Config::set('livewire-tables.translate_namespace', 'adminhub');
@@ -231,16 +231,16 @@ class AdminHubServiceProvider extends ServiceProvider
             });
 
             $this->publishes([
-                __DIR__.'/../database/migrations/' => database_path('migrations'),
+                __DIR__ . '/../database/migrations/' => database_path('migrations'),
             ], 'lunar.migrations');
 
             $this->publishes([
-                __DIR__.'/../resources/views/components/branding' => resource_path('views/vendor/adminhub/components/branding'),
-                __DIR__.'/../resources/views/pdf' => resource_path('views/vendor/adminhub/pdf'),
+                __DIR__ . '/../resources/views/components/branding' => resource_path('views/vendor/adminhub/components/branding'),
+                __DIR__ . '/../resources/views/pdf' => resource_path('views/vendor/adminhub/pdf'),
             ], 'lunar.hub.views');
 
             $this->publishes([
-                __DIR__.'/../resources/lang' => lang_path('vendor/adminhub'),
+                __DIR__ . '/../resources/lang' => lang_path('vendor/adminhub'),
             ], 'lunar.hub.translations');
 
             $this->commands([
@@ -258,8 +258,7 @@ class AdminHubServiceProvider extends ServiceProvider
         );
     }
 
-    protected function registerMenuBuilder()
-    {
+    protected function registerMenuBuilder() {
         SidebarMenu::make();
         SettingsMenu::make();
         OrderActionsMenu::make();
@@ -270,8 +269,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerLivewireComponents()
-    {
+    protected function registerLivewireComponents() {
         $this->registerGlobalComponents();
         $this->registerAuthenticationComponents();
         $this->registerProductComponents();
@@ -294,8 +292,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerGlobalComponents()
-    {
+    protected function registerGlobalComponents() {
         Livewire::component('dashboard', Dashboard::class);
         Livewire::component('hub.components.activity-log-feed', ActivityLogFeed::class);
         Livewire::component('hub.components.product-search', ProductSearch::class);
@@ -308,8 +305,7 @@ class AdminHubServiceProvider extends ServiceProvider
         Livewire::component('hub.components.tags', Tags::class);
     }
 
-    protected function registerDashboardComponents()
-    {
+    protected function registerDashboardComponents() {
         Livewire::component('hub.components.dashboard.sales-performance', SalesPerformance::class);
     }
 
@@ -318,14 +314,12 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerAuthenticationComponents()
-    {
+    protected function registerAuthenticationComponents() {
         Livewire::component('hub.components.password-reset', PasswordReset::class);
         Livewire::component('hub.components.login-form', LoginForm::class);
     }
 
-    protected function registerOrderComponents()
-    {
+    protected function registerOrderComponents() {
         Livewire::component('hub.components.orders.index', OrdersIndex::class);
         Livewire::component('hub.components.orders.show', OrderShow::class);
         Livewire::component('hub.components.orders.refund', OrderRefund::class);
@@ -337,8 +331,7 @@ class AdminHubServiceProvider extends ServiceProvider
         Livewire::component('hub.components.orders.table', OrdersTable::class);
     }
 
-    protected function registerCustomerComponents()
-    {
+    protected function registerCustomerComponents() {
         Livewire::component('hub.components.customers.index', CustomersIndex::class);
         Livewire::component('hub.components.customers.table', CustomersTable::class);
         Livewire::component('hub.components.customers.show', CustomerShow::class);
@@ -349,8 +342,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerProductComponents()
-    {
+    protected function registerProductComponents() {
         Livewire::component('hub.components.products.index', ProductsIndex::class);
         Livewire::component('hub.components.products.table', ProductsTable::class);
         Livewire::component('hub.components.products.show', ProductShow::class);
@@ -380,8 +372,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerBrandComponents()
-    {
+    protected function registerBrandComponents() {
         Livewire::component('hub.components.brands.index', BrandsIndex::class);
         Livewire::component('hub.components.brands.table', BrandsTable::class);
         Livewire::component('hub.components.brands.show', BrandShow::class);
@@ -392,8 +383,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerCollectionComponents()
-    {
+    protected function registerCollectionComponents() {
         Livewire::component('hub.components.collections.sidemenu', SideMenu::class);
         Livewire::component('hub.components.collections.collection-groups.index', CollectionGroupsIndex::class);
         Livewire::component('hub.components.collections.collection-groups.show', CollectionGroupShow::class);
@@ -407,8 +397,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerReportingComponents()
-    {
+    protected function registerReportingComponents() {
         Livewire::component('hub.components.reporting.apex-chart', ApexChart::class);
     }
 
@@ -417,8 +406,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerSettingsComponents()
-    {
+    protected function registerSettingsComponents() {
         // Activity Log
         Livewire::component('hub.components.settings.activity-log.index', ActivityLogIndex::class);
         Livewire::component('hub.components.settings.activity-log.table', ActivityLogTable::class);
@@ -484,13 +472,11 @@ class AdminHubServiceProvider extends ServiceProvider
         Livewire::component('hub.components.settings.taxes.tax-classes.index', TaxClassesIndex::class);
     }
 
-    protected function registerFieldtypeComponents()
-    {
+    protected function registerFieldtypeComponents() {
         Livewire::component('hub.components.fieldtypes.file', FileFieldtype::class);
     }
 
-    public function registerDiscountComponents()
-    {
+    public function registerDiscountComponents() {
         Livewire::component('hub.components.discounts.index', DiscountsIndex::class);
         Livewire::component('hub.components.discounts.show', DiscountShow::class);
         Livewire::component('hub.components.discounts.create', DiscountCreate::class);
@@ -505,10 +491,9 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    private function registerPublishables()
-    {
+    private function registerPublishables() {
         $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/lunar/admin-hub/'),
+            __DIR__ . '/../public' => public_path('vendor/lunar/admin-hub/'),
         ], 'lunar.hub.public');
     }
 
@@ -517,8 +502,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerAuthGuard()
-    {
+    protected function registerAuthGuard() {
         $this->app['config']->set('auth.providers.staff', [
             'driver' => 'eloquent',
             'model' => Staff::class,
@@ -540,8 +524,7 @@ class AdminHubServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerPermissionManifest()
-    {
+    protected function registerPermissionManifest() {
         Gate::after(function ($user, $ability) {
             // Are we trying to authorize something within the hub?
             $permission = $this->app->get(Manifest::class)->getPermissions()->first(fn ($permission) => $permission->handle === $ability);
@@ -551,8 +534,7 @@ class AdminHubServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerStateListeners()
-    {
+    protected function registerStateListeners() {
         $states = [
             EnsurePermissionsAreUpgraded::class,
         ];
