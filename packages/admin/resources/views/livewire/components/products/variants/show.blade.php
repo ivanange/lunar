@@ -1,42 +1,35 @@
 @section('menu')
-    <x-hub::layout.side-menu>
-        @livewire('hub.components.products.variants.side-menu', [
-            'product' => $product,
-            'variant' => $variant,
-        ])
-    </x-hub::layout.side-menu>
+<x-hub::layout.side-menu>
+    @livewire('hub.components.products.variants.side-menu', [
+    'product' => $product,
+    'variant' => $variant,
+    ])
+</x-hub::layout.side-menu>
 @stop
 
 <div class="pb-28">
-    <form wire:submit.prevent="save"
-          class="space-y-6">
+    <form wire:submit.prevent="save" class="space-y-6">
         <div class="flex items-center gap-4">
             <a href="{{ route('hub.products.show', $product) }}"
-               class="text-gray-600 rounded bg-gray-50 hover:bg-sky-500 hover:text-white"
-               title="Go back to product listing">
-                <x-hub::icon ref="chevron-left"
-                             style="solid"
-                             class="w-8 h-8" />
+                class="text-gray-600 rounded bg-gray-50 hover:bg-primary-500 hover:text-white"
+                title="Go back to product listing">
+                <x-hub::icon ref="chevron-left" style="solid" class="w-8 h-8" />
             </a>
 
             <h1 class="text-xl font-bold md:text-xl">
                 @foreach ($variant->values as $value)
-                    {{ $value->translate('name') }} {{ !$loop->last ? '/' : null }}
+                {{ $value->translate('name') }} {{ !$loop->last ? '/' : null }}
                 @endforeach
             </h1>
         </div>
 
         <div x-data="{ showVariantSlideover: false }">
             <div class="flex items-center gap-4 mt-4 lg:hidden">
-                <x-hub::button type="button"
-                               theme="gray"
-                               x-on:click="showVariantSlideover = !showVariantSlideover">
+                <x-hub::button type="button" theme="gray" x-on:click="showVariantSlideover = !showVariantSlideover">
                     {{ __('View Variants') }}
                 </x-hub::button>
 
-                <x-hub::button theme="gray"
-                               type="button"
-                               wire:click="$set('showAddVariant', true)">
+                <x-hub::button theme="gray" type="button" wire:click="$set('showAddVariant', true)">
                     {{ __('adminhub::catalogue.product-variants.add_variant.btn') }}
                 </x-hub::button>
             </div>
@@ -44,34 +37,31 @@
             <x-hub::slideover-simple target="showVariantSlideover">
                 <nav class="space-y-2">
                     @foreach ($product->variants as $v)
-                        <a href="{{ route('hub.products.variants.show', [
+                    <a href="{{ route('hub.products.variants.show', [
                             'product' => $product,
                             'variant' => $v,
-                        ]) }}"
-                           @class([
-                               'p-2 rounded text-gray-500 flex items-center gap-2',
-                               'bg-sky-50 text-sky-700 hover:text-sky-600' => $variant->id == $v->id,
-                               'hover:bg-sky-50 hover:text-sky-700' => $variant->id != $v->id,
-                           ])
-                           aria-current="page">
-                            <div class="shrink-0">
-                                @if ($media = $v->images->first())
-                                    <img class="block object-cover w-6 h-6 rounded shadow"
-                                         src="{{ $media->getFullUrl('small') }}">
-                                @else
-                                    <x-hub::icon ref="photograph"
-                                                 class="w-6 h-6" />
-                                @endif
-                            </div>
+                        ]) }}" @class([ 'p-2 rounded text-gray-500 flex items-center gap-2'
+                        , 'bg-primary-50 text-primary-700 hover:text-primary-600'=> $variant->id == $v->id,
+                        'hover:bg-primary-50 hover:text-primary-700' => $variant->id != $v->id,
+                        ])
+                        aria-current="page">
+                        <div class="shrink-0">
+                            @if ($media = $v->images->first())
+                            <img class="block object-cover w-6 h-6 rounded shadow"
+                                src="{{ $media->getFullUrl('small') }}">
+                            @else
+                            <x-hub::icon ref="photograph" class="w-6 h-6" />
+                            @endif
+                        </div>
 
-                            <div class="flex-1">
-                                <span class="block text-sm font-medium truncate w-44">
-                                    @foreach ($v->values as $value)
-                                        {{ $value->translate('name') }} {{ !$loop->last ? '/' : null }}
-                                    @endforeach
-                                </span>
-                            </div>
-                        </a>
+                        <div class="flex-1">
+                            <span class="block text-sm font-medium truncate w-44">
+                                @foreach ($v->values as $value)
+                                {{ $value->translate('name') }} {{ !$loop->last ? '/' : null }}
+                                @endforeach
+                            </span>
+                        </div>
+                    </a>
                     @endforeach
                 </nav>
             </x-hub::slideover-simple>
@@ -85,11 +75,11 @@
 
         <div class="space-y-6">
             @foreach ($this->getSlotsByPosition('top') as $slot)
-                <div id="{{ $slot->handle }}">
-                    <div>
-                        @livewire($slot->component, ['slotModel' => $variant], key('top-slot-{{ $slot->handle }}'))
-                    </div>
+            <div id="{{ $slot->handle }}">
+                <div>
+                    @livewire($slot->component, ['slotModel' => $variant], key('top-slot-{{ $slot->handle }}'))
                 </div>
+            </div>
             @endforeach
 
             <div id="attributes">
@@ -97,10 +87,10 @@
             </div>
 
             @include('adminhub::partials.image-manager', [
-                'existing' => $images,
-                'wireModel' => 'imageUploadQueue',
-                'filetypes' => ['image/*'],
-                'chooseFrom' => $this->productImages,
+            'existing' => $images,
+            'wireModel' => 'imageUploadQueue',
+            'filetypes' => ['image/*'],
+            'chooseFrom' => $this->productImages,
             ])
 
             @include('adminhub::partials.pricing')
@@ -112,11 +102,11 @@
             @include('adminhub::partials.shipping')
 
             @foreach ($this->getSlotsByPosition('bottom') as $slot)
-                <div id="{{ $slot->handle }}">
-                    <div>
-                        @livewire($slot->component, ['slotModel' => $variant], key('bottom-slot-{{ $slot->handle }}'))
-                    </div>
+            <div id="{{ $slot->handle }}">
+                <div>
+                    @livewire($slot->component, ['slotModel' => $variant], key('bottom-slot-{{ $slot->handle }}'))
                 </div>
+            </div>
             @endforeach
 
             <div class="bg-white border border-red-300 rounded shadow">
@@ -133,9 +123,8 @@
                         </div>
 
                         <div class="text-right">
-                            <x-hub::button wire:click.prevent="$set('showDeleteConfirm', true)"
-                                           type="button"
-                                           theme="danger">
+                            <x-hub::button wire:click.prevent="$set('showDeleteConfirm', true)" type="button"
+                                theme="danger">
                                 {{ __('adminhub::global.delete') }}
                             </x-hub::button>
                         </div>
@@ -154,15 +143,11 @@
 
                 <x-slot name="footer">
                     <div class="flex items-center justify-end space-x-4">
-                        <x-hub::button theme="gray"
-                                       type="button"
-                                       wire:click.prevent="$set('showDeleteConfirm', false)">
+                        <x-hub::button theme="gray" type="button" wire:click.prevent="$set('showDeleteConfirm', false)">
                             {{ __('adminhub::global.cancel') }}
                         </x-hub::button>
 
-                        <x-hub::button wire:click.prevent="delete"
-                                       theme="danger"
-                                       type="button">
+                        <x-hub::button wire:click.prevent="delete" theme="danger" type="button">
                             {{ __('adminhub::catalogue.product-variants.delete_confirm.btn') }}
                         </x-hub::button>
                     </div>
@@ -173,7 +158,7 @@
 
     <div class="pt-12 mt-12 border-t">
         @livewire('hub.components.activity-log-feed', [
-            'subject' => $variant,
+        'subject' => $variant,
         ])
     </div>
 </div>

@@ -4,15 +4,13 @@ namespace Lunar\Hub\Menu;
 
 use Lunar\Hub\Facades\Menu;
 
-final class SidebarMenu
-{
+final class SidebarMenu {
     /**
      * Make menu.
      *
      * @return void
      */
-    public static function make()
-    {
+    public static function make() {
         (new self())
             ->makeTopLevel()
             ->addSections();
@@ -23,8 +21,7 @@ final class SidebarMenu
      *
      * @return static
      */
-    protected function makeTopLevel()
-    {
+    protected function makeTopLevel() {
         $slot = Menu::slot('sidebar');
 
         $slot->addItem(function ($item) {
@@ -43,8 +40,7 @@ final class SidebarMenu
      *
      * @return static
      */
-    protected function addSections()
-    {
+    protected function addSections() {
         $slot = Menu::slot('sidebar');
 
         $catalogueGroup = $slot
@@ -108,14 +104,14 @@ final class SidebarMenu
                 ->icon('users');
         });
 
-        $salesGroup->addItem(function ($menuItem) {
-            $menuItem
-                ->name(__('adminhub::menu.sidebar.discounts'))
-                ->handle('hub.discounts')
-                ->gate('catalogue:manage-discounts')
-                ->route('hub.discounts.index')
-                ->icon('ticket');
-        });
+        // $salesGroup->addItem(function ($menuItem) {
+        //     $menuItem
+        //         ->name(__('adminhub::menu.sidebar.discounts'))
+        //         ->handle('hub.discounts')
+        //         ->gate('catalogue:manage-discounts')
+        //         ->route('hub.discounts.index')
+        //         ->icon('ticket');
+        // });
 
         return $this;
     }

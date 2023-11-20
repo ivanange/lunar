@@ -1,13 +1,12 @@
 <div>
-    <label for="{{ $for }}"
-           class="flex items-center text-sm font-medium text-gray-700">
+    <label for="{{ $for }}" class="flex items-center text-sm font-medium text-gray-700">
         <span class="block">{{ $labelPrefix ?? null }}</span>
 
         <span class="block">
-            {{ $label }}
+            {{ __($label) }}
 
             @if ($required)
-                <sup class="text-xs text-red-600">&#42;</sup>
+            <sup class="text-xs text-red-600">&#42;</sup>
             @endif
         </span>
     </label>
@@ -17,7 +16,7 @@
     </div>
 
     @if ($instructions)
-        <p class="mt-2 text-sm text-gray-500">{{ $instructions }}</p>
+    <p class="mt-2 text-sm text-gray-500">{{ $instructions }}</p>
     @endif
 
     <x-hub::errors :error="$error" :errors="$errors" />

@@ -8,8 +8,7 @@ use Lunar\LivewireTables\Components\Columns\TagsColumn;
 use Lunar\LivewireTables\Components\Columns\TextColumn;
 use Lunar\Models\Order;
 
-class OrdersTableBuilder extends TableBuilder
-{
+class OrdersTableBuilder extends TableBuilder {
     /**
      * The field to sort using.
      */
@@ -18,8 +17,7 @@ class OrdersTableBuilder extends TableBuilder
     /**
      * {@inheritDoc}
      */
-    public function getColumns(): Collection
-    {
+    public function getColumns(): Collection {
         $baseColumns = collect([
             TextColumn::make('status')->sortable(true)->viewComponent('hub::orders.status'),
             TextColumn::make('reference')->value(function ($record) {
@@ -68,8 +66,7 @@ class OrdersTableBuilder extends TableBuilder
      * @param  string  $sortDir
      * @return LengthAwarePaginator
      */
-    public function getData(): iterable
-    {
+    public function getData(): iterable {
         $query = Order::with([
             'shippingLines',
             'billingAddress',

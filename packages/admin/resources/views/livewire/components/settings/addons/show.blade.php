@@ -33,8 +33,8 @@
                         {{ __('adminhub::catalogue.addons.show.marketplace') }}
                     </dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <a href="{{ $details['github_url'] }}"
-                           class="text-sky-500 hover:underline">View Github repository</a>
+                        <a href="{{ $details['github_url'] }}" class="text-primary-500 hover:underline">View Github
+                            repository</a>
                     </dd>
                 </div>
                 <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

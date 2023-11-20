@@ -4,7 +4,7 @@
         class="absolute z-50 p-2 -mt-1 bg-white border border-gray-100 rounded-lg dark:bg-gray-900 dark:border-gray-800 top-full right-4 w-60">
         <ul>
             <li class="p-2">
-                <a href="{{ route('hub.account') }}" class="menu-link menu-link--inactive hover:text-sky-500">
+                <a href="{{ route('hub.account') }}" class="menu-link menu-link--inactive hover:text-primary-500">
                     <span class="text-sm font-medium">
                         {{ __('adminhub::account.view-profile') }}
                     </span>
@@ -14,7 +14,8 @@
             <li class="p-2">
                 <form method="POST" action="{{ route('hub.logout') }}">
                     @csrf
-                    <button type="submit" class="menu-link menu-link--inactive hover:text-sky-500 flex items-center">
+                    <button type="submit"
+                        class="menu-link menu-link--inactive hover:text-primary-500 flex items-center">
                         <x-hub::icon ref="logout" class="w-4 h-4 shrink-0" />
 
                         <span class="text-sm font-medium">

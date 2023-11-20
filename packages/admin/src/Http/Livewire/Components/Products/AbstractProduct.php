@@ -30,8 +30,7 @@ use Lunar\Models\ProductOption;
 use Lunar\Models\ProductType;
 use Lunar\Models\ProductVariant;
 
-abstract class AbstractProduct extends Component
-{
+abstract class AbstractProduct extends Component {
     use CanExtendValidation;
     use HasAvailability;
     use HasDimensions;
@@ -165,8 +164,7 @@ abstract class AbstractProduct extends Component
      */
     public array $associationsToRemove = [];
 
-    protected function getListeners()
-    {
+    protected function getListeners() {
         return array_merge(
             [
                 'updatedAttributes',
@@ -188,8 +186,7 @@ abstract class AbstractProduct extends Component
      *
      * @return array
      */
-    protected function getValidationMessages()
-    {
+    protected function getValidationMessages() {
         return array_merge(
             [],
             $this->hasPriceValidationMessages(),
@@ -203,8 +200,7 @@ abstract class AbstractProduct extends Component
      *
      * @return array
      */
-    protected function rules()
-    {
+    protected function rules() {
         $baseRules = [
             'product.status' => 'required|string',
             'product.product_type_id' => 'required',
@@ -233,7 +229,7 @@ abstract class AbstractProduct extends Component
 
         if (config('lunar-hub.products.require_brand', true)) {
             $baseRules['product.brand_id'] = 'required_without:brand';
-            $baseRules['brand'] = 'required_without:product.brand_id|unique:'.Brand::class.',name';
+            $baseRules['brand'] = 'required_without:product.brand_id|unique:' . Brand::class . ',name';
         }
 
         if ($this->getVariantsCount() <= 1) {
@@ -265,7 +261,7 @@ abstract class AbstractProduct extends Component
         return array_merge(
             $baseRules,
             $this->hasImagesValidationRules(),
-            $this->hasUrlsValidationRules(! $this->product->id),
+            $this->hasUrlsValidationRules(!$this->product->id),
             $this->withAttributesValidationRules(),
             $this->getExtendedValidationRules([
                 'product' => $this->product,
@@ -278,8 +274,7 @@ abstract class AbstractProduct extends Component
      *
      * @return array
      */
-    protected function validationAttributes()
-    {
+    protected function validationAttributes() {
         $attributes = [
             'tieredPrices.*.tier' => lang(key: 'global.lower_limit', lower: true),
         ];
@@ -296,8 +291,7 @@ abstract class AbstractProduct extends Component
      * @param  array  $optionIds
      * @return void
      */
-    public function setOptions($optionIds)
-    {
+    public function setOptions($optionIds) {
         $this->options = ProductOption::findMany($optionIds);
         $this->emit('products.options.updated', $optionIds);
         $this->optionsPanelVisible = false;
@@ -309,8 +303,7 @@ abstract class AbstractProduct extends Component
      * @param  bool  $val
      * @return void
      */
-    public function setVariantsEnabled($val)
-    {
+    public function setVariantsEnabled($val) {
         $this->variantsEnabled = $val;
     }
 
@@ -320,8 +313,7 @@ abstract class AbstractProduct extends Component
      * @param  array  $values
      * @return void
      */
-    public function setOptionValues($values)
-    {
+    public function setOptionValues($values) {
         $this->optionValues = $values;
     }
 
@@ -331,8 +323,7 @@ abstract class AbstractProduct extends Component
      * @param  int  $key
      * @return void
      */
-    public function removeOption($key)
-    {
+    public function removeOption($key) {
         $option = $this->options[$key];
 
         $remainingValues = collect($this->optionValues)->diff($option->values->pluck('id'));
@@ -347,8 +338,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void|\Symfony\Component\HttpFoundation\Response
      */
-    public function save()
-    {
+    public function save() {
         $this->withValidator(function (Validator $validator) {
             $validator->after(function ($validator) {
                 if ($validator->errors()->count()) {
@@ -361,7 +351,7 @@ abstract class AbstractProduct extends Component
         })->validate(null, $this->getValidationMessages());
 
         $this->validateUrls();
-        $isNew = ! $this->product->id;
+        $isNew = !$this->product->id;
 
         DB::transaction(function () use ($isNew) {
             $data = $this->prepareAttributeData();
@@ -382,11 +372,11 @@ abstract class AbstractProduct extends Component
             $this->product->save();
 
             if (($this->getVariantsCount() <= 1) || $isNew) {
-                if (! $this->variant->product_id) {
+                if (!$this->variant->product_id) {
                     $this->variant->product_id = $this->product->id;
                 }
 
-                if (! $this->manualVolume) {
+                if (!$this->manualVolume) {
                     $this->variant->volume_unit = null;
                     $this->variant->volume_value = null;
                 }
@@ -401,9 +391,9 @@ abstract class AbstractProduct extends Component
             }
 
             // We generating variants?
-            $generateVariants = (bool) count($this->optionValues) && ! $this->variantsDisabled;
+            $generateVariants = (bool) count($this->optionValues) && !$this->variantsDisabled;
 
-            if (! $this->variantsEnabled && $this->getVariantsCount()) {
+            if (!$this->variantsEnabled && $this->getVariantsCount()) {
                 $variantToKeep = $this->product->variants()->first();
                 $variantToKeep->values()->detach();
 
@@ -424,7 +414,7 @@ abstract class AbstractProduct extends Component
                 GenerateVariants::dispatch($this->product, $this->optionValues);
             }
 
-            if (! $generateVariants && $this->product->variants->count() <= 1 && ! $isNew) {
+            if (!$generateVariants && $this->product->variants->count() <= 1 && !$isNew) {
                 // Only save pricing if we're not generating new variants.
                 $this->savePricing();
             }
@@ -440,8 +430,8 @@ abstract class AbstractProduct extends Component
             $channels = collect($this->availability['channels'])->mapWithKeys(function ($channel) {
                 return [
                     $channel['channel_id'] => [
-                        'starts_at' => ! $channel['enabled'] ? null : $channel['starts_at'],
-                        'ends_at' => ! $channel['enabled'] ? null : $channel['ends_at'],
+                        'starts_at' => !$channel['enabled'] ? null : $channel['starts_at'],
+                        'ends_at' => !$channel['enabled'] ? null : $channel['ends_at'],
                         'enabled' => $channel['enabled'],
                     ],
                 ];
@@ -468,7 +458,7 @@ abstract class AbstractProduct extends Component
             }
 
             $this->associations->each(function ($assoc) {
-                if (! empty($assoc['id'])) {
+                if (!empty($assoc['id'])) {
                     ProductAssociation::find($assoc['id'])->update([
                         'type' => $assoc['type'],
                     ]);
@@ -523,8 +513,7 @@ abstract class AbstractProduct extends Component
      *
      * @return int
      */
-    public function getVariantsCount()
-    {
+    public function getVariantsCount() {
         return $this->product->variants->count();
     }
 
@@ -534,8 +523,7 @@ abstract class AbstractProduct extends Component
      * @param  int  $variantId
      * @return void
      */
-    public function deleteVariant($variantId)
-    {
+    public function deleteVariant($variantId) {
         if ($this->getVariantsCount() == 1) {
             $this->notify(
                 __('adminhub::notifications.variants.minimum_reached'),
@@ -551,8 +539,7 @@ abstract class AbstractProduct extends Component
         $this->product->refresh();
     }
 
-    public function getExistingTagsProperty(): array
-    {
+    public function getExistingTagsProperty(): array {
         return $this->product->tags->pluck('value')->toArray();
     }
 
@@ -561,8 +548,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    public function getVariantsDisabledProperty()
-    {
+    public function getVariantsDisabledProperty() {
         return config('lunar-hub.products.disable_variants', false);
     }
 
@@ -571,8 +557,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    protected function syncAvailability()
-    {
+    protected function syncAvailability() {
         $this->availability = [
             'channels' => $this->channels->mapWithKeys(function ($channel) {
                 $productChannel = $this->product->channels->first(fn ($assoc) => $assoc->id == $channel->id);
@@ -582,7 +567,7 @@ abstract class AbstractProduct extends Component
                         'channel_id' => $channel->id,
                         'starts_at' => $productChannel ? $productChannel->pivot->starts_at : null,
                         'ends_at' => $productChannel ? $productChannel->pivot->ends_at : null,
-                        'enabled' => $productChannel ? $productChannel->pivot->enabled : false,
+                        'enabled' => $productChannel ? $productChannel->pivot->enabled : true,
                         'scheduling' => false,
                     ],
                 ];
@@ -592,12 +577,12 @@ abstract class AbstractProduct extends Component
 
                 $pivot = $productGroup->pivot ?? null;
 
-                $status = 'hidden';
+                $status = 'visible';
 
                 if ($pivot) {
                     if ($pivot->purchasable) {
                         $status = 'purchasable';
-                    } elseif (! $pivot->visible && ! $pivot->enabled) {
+                    } elseif (!$pivot->visible && !$pivot->enabled) {
                         $status = 'hidden';
                     } elseif ($pivot->visible) {
                         $status = 'visible';
@@ -617,8 +602,7 @@ abstract class AbstractProduct extends Component
         ];
     }
 
-    protected function syncCollections()
-    {
+    protected function syncCollections() {
         $this->collections = $this->product->collections()
             ->with(['group', 'thumbnail'])
             ->get()
@@ -643,8 +627,7 @@ abstract class AbstractProduct extends Component
      * @param  int|string  $index
      * @return void
      */
-    public function removeCollection($index)
-    {
+    public function removeCollection($index) {
         $this->collectionsToDetach->push(
             $this->collections[$index]
         );
@@ -657,8 +640,7 @@ abstract class AbstractProduct extends Component
      * @param  array  $collectionIds
      * @return void
      */
-    public function selectCollections($collectionIds)
-    {
+    public function selectCollections($collectionIds) {
         $selectedCollections = ModelsCollection::findMany($collectionIds)->map(function ($collection) {
             return [
                 'id' => $collection->id,
@@ -681,12 +663,11 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    public function syncAssociations()
-    {
+    public function syncAssociations() {
         $this->associations = $this->product->associations
             ->merge($this->product->inverseAssociations)
             ->map(function ($assoc) {
-                if (! $assoc->target) {
+                if (!$assoc->target) {
                     return;
                 }
 
@@ -712,8 +693,7 @@ abstract class AbstractProduct extends Component
      * @param  array  $selectedIds
      * @return void
      */
-    public function updateAssociations($selectedIds)
-    {
+    public function updateAssociations($selectedIds) {
         $selectedProducts = Product::findMany($selectedIds)->map(function ($product) {
             return [
                 'is_temp' => true,
@@ -738,8 +718,7 @@ abstract class AbstractProduct extends Component
      * @param  string  $type
      * @return void
      */
-    public function openAssociationBrowser($type)
-    {
+    public function openAssociationBrowser($type) {
         $this->associationType = $type;
         $this->emit('showBrowser', 'product-associations');
     }
@@ -750,8 +729,7 @@ abstract class AbstractProduct extends Component
      * @param  int  $index
      * @return void
      */
-    public function removeAssociation($index)
-    {
+    public function removeAssociation($index) {
         $association = $this->associations[$index];
 
         if (isset($association['is_temp'])) {
@@ -769,8 +747,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    public function getAssociatedProductIdsProperty()
-    {
+    public function getAssociatedProductIdsProperty() {
         return collect(
             $this->associations->map(fn ($assoc) => ['id' => $assoc['target_id']])
         );
@@ -781,8 +758,7 @@ abstract class AbstractProduct extends Component
      *
      * @return array
      */
-    public function getAttributeDataProperty()
-    {
+    public function getAttributeDataProperty() {
         return $this->product->attribute_data;
     }
 
@@ -791,8 +767,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    public function resetOptionView()
-    {
+    public function resetOptionView() {
         $this->optionView = 'select';
     }
 
@@ -801,8 +776,7 @@ abstract class AbstractProduct extends Component
      *
      * @return void
      */
-    public function getAvailableAttributesProperty()
-    {
+    public function getAvailableAttributesProperty() {
         return ProductType::find(
             $this->product->product_type_id
         )->productAttributes->sortBy('position')->values();
@@ -813,8 +787,7 @@ abstract class AbstractProduct extends Component
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getAvailableVariantAttributesProperty()
-    {
+    public function getAvailableVariantAttributesProperty() {
         return ProductType::find(
             $this->product->product_type_id
         )->variantAttributes->sortBy('position')->values();
@@ -825,8 +798,7 @@ abstract class AbstractProduct extends Component
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getVariantAttributeGroupsProperty()
-    {
+    public function getVariantAttributeGroupsProperty() {
         $groupIds = $this->variantAttributes->pluck('group_id')->unique();
 
         return AttributeGroup::whereIn('id', $groupIds)
@@ -844,8 +816,7 @@ abstract class AbstractProduct extends Component
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getSideMenuProperty()
-    {
+    public function getSideMenuProperty() {
         return collect([
             [
                 'title' => __('adminhub::menu.product.basic-information'),
@@ -965,18 +936,15 @@ abstract class AbstractProduct extends Component
      *
      * @return \Lunar\Models\ProductVariant
      */
-    protected function getPricedModel()
-    {
+    protected function getPricedModel() {
         return $this->product->variants->first() ?: $this->variant;
     }
 
-    protected function getHasUrlsModel()
-    {
+    protected function getHasUrlsModel() {
         return $this->product;
     }
 
-    public function getHasDimensionsModel()
-    {
+    public function getHasDimensionsModel() {
         return $this->variant;
     }
 
@@ -985,8 +953,7 @@ abstract class AbstractProduct extends Component
      *
      * @return \Lunar\Models\Product
      */
-    protected function getMediaModel()
-    {
+    protected function getMediaModel() {
         return $this->product;
     }
 
@@ -995,8 +962,7 @@ abstract class AbstractProduct extends Component
      *
      * @return \Lunar\Models\Product
      */
-    protected function getSlotModel()
-    {
+    protected function getSlotModel() {
         return $this->product;
     }
 
@@ -1005,8 +971,7 @@ abstract class AbstractProduct extends Component
      *
      * @return array
      */
-    protected function getSlotContexts()
-    {
+    protected function getSlotContexts() {
         return ['product.all'];
     }
 

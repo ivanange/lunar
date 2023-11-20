@@ -31,37 +31,37 @@
     </x-slot>
     <x-slot name="body">
       @foreach($this->orders as $order)
-        <x-hub::table.row>
-          <x-hub::table.cell>
-            {{ $order->id }}
-          </x-hub::table.cell>
+      <x-hub::table.row>
+        <x-hub::table.cell>
+          {{ $order->id }}
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            {{ $order->user->name }}
-          </x-hub::table.cell>
+        <x-hub::table.cell>
+          {{ $order->user->name }}
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            <x-hub::orders.status :status="$order->status" />
-          </x-hub::table.cell>
+        <x-hub::table.cell>
+          <x-hub::orders.status :status="$order->status" />
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            {{ $order->reference }}
-          </x-hub::table.cell>
+        <x-hub::table.cell>
+          {{ $order->reference }}
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            {{ $order->sub_total->formatted }}
-          </x-hub::table.cell>
+        <x-hub::table.cell>
+          {{ $order->sub_total->formatted }}
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            {{ $order->placed_at?->format('Y-m-d h:ia') }}
-          </x-hub::table.cell>
+        <x-hub::table.cell>
+          {{ $order->placed_at?->format('Y-m-d h:ia') }}
+        </x-hub::table.cell>
 
-          <x-hub::table.cell>
-            <a href="{{ route('hub.orders.show', $order->id) }}" class="text-sky-500 hover:underline">
-              {{ __('adminhub::global.view') }}
-            </a>
-          </x-hub::table.cell>
-        </x-hub::table.row>
+        <x-hub::table.cell>
+          <a href="{{ route('hub.orders.show', $order->id) }}" class="text-primary-500 hover:underline">
+            {{ __('adminhub::global.view') }}
+          </a>
+        </x-hub::table.cell>
+      </x-hub::table.row>
 
       @endforeach
     </x-slot>

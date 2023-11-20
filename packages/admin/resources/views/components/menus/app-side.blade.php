@@ -2,49 +2,41 @@
     <div class="border-t border-b border-gray-100 pt-4 p-4">
         <x-hub::menu handle="sidebar" current="{{ request()->route()->getName() }}">
             @foreach ($component->items as $item)
-                <x-hub::menus.app-side.link
-                    :item="$item"
-                    :active="$item->isActive(
+            <x-hub::menus.app-side.link :item="$item" :active="$item->isActive(
                         $component->attributes->get('current')
-                    )"
-                />
+                    )" />
             @endforeach
 
             @foreach ($component->groups as $group)
-                <x-hub::menus.app-side.group
-                    :group="$group"
-                    :current="$component->attributes->get('current')"
-                />
+            <x-hub::menus.app-side.group :group="$group" :current="$component->attributes->get('current')" />
             @endforeach
         </x-hub::menu>
     </div>
 
-    
+
     @if (Auth::user()->can('settings'))
-        @php
-            $settings = Lunar\Hub\Facades\Menu::slot('settings');
-        @endphp
+    @php
+    $settings = Lunar\Hub\Facades\Menu::slot('settings');
+    @endphp
 
-        @if($settings->hasLinks())
-            <div class="p-4 border-t border-gray-100 bottom-0">
-                <a href="{{ route('hub.settings') }}"
-                @class([
-                    'flex items-center gap-2 p-2 rounded w-full text-sm',
-                    'bg-sky-50 text-sky-700' => Str::contains(request()->url(), 'settings'),
-                    'text-gray-500 hover:text-gray-900' => !Str::contains(
-                        request()->url(),
-                        'settings'
-                    ),
-                ])>
-                    <span x-cloak>
-                        {!! Lunar\Hub\LunarHub::icon('cog', 'w-5 h-5') !!}
-                    </span>
+    @if($settings->hasLinks())
+    <div class="p-4 border-t border-gray-100 bottom-0">
+        <a href="{{ route('hub.settings') }}" @class([ 'flex items-center gap-2 p-2 rounded w-full text-sm'
+            , 'bg-primary-50 text-primary-700'=> Str::contains(request()->url(), 'settings'),
+            'text-gray-500 hover:text-gray-900' => !Str::contains(
+            request()->url(),
+            'settings'
+            ),
+            ])>
+            <span x-cloak>
+                {!! Lunar\Hub\LunarHub::icon('cog', 'w-5 h-5') !!}
+            </span>
 
-                    <span>
-                        {{ __('adminhub::global.settings') }}
-                    </span>
-                </a>
-            </div>
-        @endif
+            <span>
+                {{ __('adminhub::global.settings') }}
+            </span>
+        </a>
+    </div>
+    @endif
     @endif
 </div>
