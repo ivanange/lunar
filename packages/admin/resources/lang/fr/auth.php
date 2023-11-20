@@ -2,9 +2,9 @@
 
 return [
     /**
-     * Collections.
+     * Catégories.
      */
-    'permissions.catalogue.collections.name' => 'Manage Collections',
+    'permissions.catalogue.collections.name' => 'Manage Catégories',
     'permissions.catalogue.collections.description' => 'Allow the staff member to edit collections and their groups',
     'permissions.settings.name' => 'Settings',
     'permissions.settings.description' => 'Gives access to the settings area of the hub.',

@@ -91,18 +91,18 @@ return [
     'brand-search.commit_btn' => 'Select Brands',
 
     /**
-     * Collection search.
+     * Category search.
      */
-    'collection-search.btn' => 'Add Collections',
-    'collection-search.first_tab' => 'Search collections',
-    'collection-search.second_tab' => 'Selected collections',
-    'collection-search.max_results_exceeded' => 'Showing the first :max of :total collections. Try being more specific in your search.',
+    'collection-search.btn' => 'Add Categories',
+    'collection-search.first_tab' => 'Search categories',
+    'collection-search.second_tab' => 'Selected categories',
+    'collection-search.max_results_exceeded' => 'Showing the first :max of :total categories. Try being more specific in your search.',
     'collection-search.exists_in_collection' => 'Already associated',
     'collection-search.no_results' => 'No results found.',
-    'collection-search.pre_search_message' => 'Search for collections by attribute.',
-    'collection-search.select_empty' => 'When you select collections, they will appear here.',
-    'collection-search.title' => 'Search for collections',
-    'collection-search.commit_btn' => 'Select Collections',
+    'collection-search.pre_search_message' => 'Search for categories by attribute.',
+    'collection-search.select_empty' => 'When you select categories, they will appear here.',
+    'collection-search.title' => 'Search for categories',
+    'collection-search.commit_btn' => 'Select Categories',
     /**
      * Customers.
      */
